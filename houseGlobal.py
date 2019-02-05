@@ -32,6 +32,7 @@ class houseGlobal:
 		self.device_manager = None
 		self.device_dict = {}
 		self.device = None
+		self.package_list = []
 		self.packagename = ""        # can have up to 1 package for each session
 		self.script_to_load = ''
 		self.script = None

@@ -186,6 +186,13 @@ def setPackage(pkgname):
     with open('./config/inspect_cache.html','w') as f:
         f.write(" ")
     update_conf()
+
+def updatePackages():
+    house_global.package_list = sorted(a.identifier for a in house_global.device.enumerate_applications())
+    '''
+    socketio.emit('show_packages',
+            {'package_list': json.dumps(house_global.package_list)}, namespace='/eventBus')
+    '''
     
 def setDevice(id):
     house_global.device = house_global.device_manager.get_device(id)
@@ -194,6 +201,7 @@ def setDevice(id):
         socketio.emit('show_selected_device',
                   {'device_list': json.dumps(house_global.device_dict), 'selection': str(house_global.device.id)},
                   namespace='/eventBus')
+        updatePackages()
     except Exception as e:
         raise e
     
@@ -211,9 +219,10 @@ def getDevice():
                     remote_device_list.append(dv)
         if len(remote_device_list) == 1:
             house_global.device = remote_device_list[0]
-            socketio.emit('update_device', 
+            socketio.emit('update_device',
                 {'data': cgi.escape(str(house_global.device))},          
                 namespace='/eventBus')
+            updatePackages()
         elif len(remote_device_list) > 1:
             for dv in remote_device_list:
                 house_global.device_dict[str(dv.id)] = str(dv)
@@ -226,6 +235,7 @@ def getDevice():
                 socketio.emit('show_selected_device',
                                   {'device_list': json.dumps(house_global.device_dict), 'selection': str(house_global.device.id)},
                                   namespace='/eventBus')
+                updatePackages()
         else:
             raise Exception("No device Found!")
         # return str(house_global.device)

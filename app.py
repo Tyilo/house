@@ -98,6 +98,10 @@ def getEnumScript():
 def getpkg():
     return house_global.packagename
 
+@app.route('/packages', methods=['GET'])
+def get_packages():
+    return json.dumps(house_global.package_list)
+
 @app.route('/hook_clear', methods=['GET'])
 def hook_clear():
     house_global.hooks_list = []

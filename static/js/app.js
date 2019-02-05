@@ -19,6 +19,14 @@ function select_device() {
     if (device_id != null) {
         socket.emit("set_device_id", { id: device_id })
     }
+
+    update_pkglist();
+}
+
+function update_pkglist() {
+    $.get('http://' + location.host + '/packages', (data) => {
+        $('#packagelist').text(JSON.parse(data).join('\n'));
+    });
 }
 
 function doEnv() {
@@ -375,6 +383,8 @@ window.onload = function() {
             }
             $("#pkg_info").html(package_html)
             console.log(("[+]new package: " + package.data))
+
+            update_pkglist();
             // console.log(data)
         })
     }
